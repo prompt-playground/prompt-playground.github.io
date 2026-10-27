@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta property="og:title" content="전생 인연서">
+<meta property="og:description" content="너랑 나, 전생에 무슨 사이였을까">
+<title>전생 인연서</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Brush+Script&family=Noto+Serif+KR:wght@700;900&family=Song+Myung&display=swap">
+<style>
+/* 레이아웃: 한지 창살 그림자가 비치는 밝은 벽에 비단으로 표구한 족자 한 폭이 걸려 있음. 축이 내려가며 족자가 펼쳐짐. 한 가지 세계로 고정한 단일 테마. */
+:root{
+  --wall:#efe5d3; --wall-2:#e2d3b8;
+  --silk:#56707a; --silk-2:#4a626b; --silk-hi:#6f8a93;
+  --trim:#b8913f; --trim-red:#8f2e24;
+  --paper:#ece0c3; --ink:#1f1a16; --ink-soft:#5a4d40;
+  --seal:#a8281f; --jjok:#2e4a68;
+  --lacquer:#3a2214; --ivory:#e9e0c9;
+  --f-brush:"Nanum Brush Script","Song Myung",serif;
+  --f-title:"Song Myung","Gowun Batang",serif;
+  --f-body:"Gowun Batang","Noto Serif KR",serif;
+  --f-hanja:"Noto Serif KR","Song Myung",serif;
+  color-scheme:light;
+}
+html,body{min-height:100%}
+body{color:var(--ink);font-family:var(--f-body);background-color:var(--wall);
+  background-image:
+    radial-gradient(70% 45% at 30% 8%,rgba(255,246,222,.95),rgba(255,246,222,0) 70%),
+    repeating-linear-gradient(90deg,rgba(120,90,50,.06) 0 6px,transparent 6px 74px),
+    repeating-linear-gradient(0deg,rgba(120,90,50,.05) 0 6px,transparent 6px 110px),
+    linear-gradient(180deg,var(--wall),var(--wall-2));}
+.page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 48px;
+  display:flex;flex-direction:column;align-items:center;gap:6px}
+.masthead{text-align:center;display:flex;flex-direction:column;gap:0;margin-bottom:4px}
+.masthead h1{margin:0;font-family:var(--f-brush);font-weight:400;font-size:3.2rem;line-height:1;color:var(--ink);text-wrap:balance}
+.masthead p{margin:2px 0 0;font-family:var(--f-title);font-size:1rem;color:var(--ink-soft)}
+
+/* 족자 */
+.hang{position:relative;width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center}
+.cord{display:block;width:62%;height:46px;margin-bottom:-2px}
+.cord .str{stroke:#8a3a2c;stroke-width:2.2;fill:none}
+.cord .nail{fill:#4a3a2a}
+.rod-top{position:relative;width:calc(100% - 20px);height:14px;border-radius:7px 7px 3px 3px;
+  background:linear-gradient(180deg,#6a4128 0%,var(--lacquer) 55%,#1e110a 100%);box-shadow:0 2px 0 rgba(255,255,255,.08) inset}
+.wrap{width:calc(100% - 20px);overflow:hidden;height:0;box-shadow:0 16px 26px rgba(70,45,20,.28),0 3px 5px rgba(70,45,20,.22);transition:height 1.25s cubic-bezier(.55,.06,.3,1)}
+.mount{position:relative;
+  background-color:var(--silk);
+  background-image:
+    radial-gradient(ellipse 30% 18% at 25% 25%,rgba(255,255,255,.07) 0 60%,transparent 64%),
+    radial-gradient(ellipse 30% 18% at 75% 75%,rgba(255,255,255,.07) 0 60%,transparent 64%),
+    radial-gradient(circle at 75% 25%,rgba(0,0,0,.035) 0 6%,transparent 8%),
+    radial-gradient(circle at 25% 75%,rgba(0,0,0,.035) 0 6%,transparent 8%),
+    linear-gradient(90deg,rgba(255,255,255,.06),rgba(0,0,0,.08) 50%,rgba(255,255,255,.06));
+  background-size:26px 26px,26px 26px,26px 26px,26px 26px,100% 100%;
+  padding:58px 20px 70px}
+.mount::before{content:"";position:absolute;left:0;right:0;top:20px;height:4px;background:var(--trim);opacity:.85}
+.mount::after{content:"";position:absolute;left:0;right:0;bottom:26px;height:4px;background:var(--trim);opacity:.85}
+.frame{position:relative;padding:3px;background:linear-gradient(var(--trim),var(--trim));box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.frame::before{content:"";position:absolute;inset:3px;border:1px solid var(--trim-red);z-index:2;pointer-events:none}
+.paper{position:relative;background-color:var(--paper);background-image:var(--tex,none);
+  box-shadow:inset 0 0 40px rgba(120,80,30,.22),inset 0 0 6px rgba(90,60,20,.3);
+  padding:30px 22px 34px}
+.rod-bot{position:relative;width:calc(100% - 20px);height:22px;border-radius:11px;
+  background:linear-gradient(180deg,#7a4b2c 0%,var(--lacquer) 50%,#1a0e07 100%);box-shadow:0 6px 8px rgba(40,20,5,.35)}
+.knob{position:absolute;top:-4px;width:26px;height:30px;border-radius:7px;
+  background:linear-gradient(90deg,#b9ad92,var(--ivory) 35%,#fffaf0 50%,#cfc4aa 80%,#a99c80);box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.knob.l{left:-22px}.knob.r{right:-22px}
+.status{min-height:1.6em;margin:10px 0 0;text-align:center;font-family:var(--f-title);color:var(--ink-soft);opacity:0;transition:opacity .3s}
+.status.on{opacity:1}
+
+/* 입력 */
+.doc-head{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;margin-bottom:20px}
+.doc-head .vert{writing-mode:vertical-rl;font-family:var(--f-hanja);font-weight:900;font-size:1.65rem;letter-spacing:.12em;line-height:1;color:var(--ink);filter:url(#ink)}
+.doc-head .ko{font-family:var(--f-title);font-size:1.3rem;line-height:1.5;padding-top:4px;word-break:keep-all}
+.doc-head .ko small{display:block;font-family:var(--f-body);font-size:.85rem;color:var(--ink-soft);margin-top:6px}
+.people{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:360px){.people{grid-template-columns:1fr}}
+.person{display:flex;flex-direction:column;gap:12px;min-width:0;border:0;margin:0;padding:0}
+.person h2{margin:0;font-family:var(--f-title);font-weight:400;font-size:1rem;color:var(--seal);letter-spacing:.1em}
+.field{display:flex;flex-direction:column;gap:2px}
+.field label{font-size:.78rem;color:var(--ink-soft);letter-spacing:.08em}
+.field input{font:inherit;font-size:1.08rem;color:var(--ink);background:transparent;border:0;border-bottom:1px solid rgba(31,26,22,.55);border-radius:0;padding:6px 2px;width:100%;box-sizing:border-box;min-width:0}
+.field input:focus{outline:none;border-bottom:2px solid var(--seal);background:rgba(168,40,31,.04)}
+.err{min-height:1.3em;margin:14px 0 0;text-align:center;color:var(--seal);font-size:.9rem}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{font-family:var(--f-title);font-size:1.08rem;padding:12px 24px;border-radius:2px;cursor:pointer;border:0;letter-spacing:.08em}
+.btn-seal{background:var(--seal);color:#f6ead2;box-shadow:inset 0 0 0 2px rgba(246,234,210,.55),inset 0 0 0 5px var(--seal),0 2px 0 #6e1813}
+.btn-seal:active{transform:translateY(1px)}
+.btn-line{background:transparent;color:var(--ink);border:1px solid rgba(31,26,22,.6);font-size:1rem;padding:10px 18px}
+.btn:focus-visible,.field input:focus-visible{outline:2px solid var(--jjok);outline-offset:3px}
+.fine{margin:16px 0 0;text-align:center;font-size:.76rem;color:var(--ink-soft)}
+
+/* 결과 */
+.result{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.calli{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;width:100%;min-height:330px}
+.calli .side{writing-mode:vertical-rl;justify-self:end;font-family:var(--f-title);font-size:1rem;letter-spacing:.2em;color:var(--ink-soft);padding-top:10px;margin-right:14px}
+.saja{writing-mode:vertical-rl;font-family:var(--f-hanja);font-weight:900;font-size:4.6rem;line-height:1;letter-spacing:.06em;color:var(--ink);filter:url(#ink)}
+.seal{justify-self:start;align-self:end;margin-left:14px;margin-bottom:6px;width:62px;height:62px;
+  background:var(--seal);color:#f3e6cf;display:grid;grid-template-columns:1fr 1fr;place-items:center;padding:6px;box-sizing:border-box;
+  font-family:var(--f-hanja);font-weight:900;font-size:1.05rem;line-height:1;border-radius:3px;
+  box-shadow:inset 0 0 0 2px #f3e6cf,inset 0 0 0 4px var(--seal);filter:url(#sealf);opacity:.92;transform:rotate(-3deg)}
+.saja-read{font-family:var(--f-title);font-size:1.1rem;letter-spacing:.35em;padding-left:.35em;color:var(--seal);margin-top:8px}
+.saja-mean{font-size:.88rem;color:var(--ink-soft);max-width:30ch}
+.stroke{width:200px;max-width:70%;height:12px;display:block;margin-top:10px}
+.stroke path{fill:var(--ink);opacity:.8}
+.rel{font-family:var(--f-title);font-weight:400;font-size:1.55rem;line-height:1.35;margin:10px 0 0;text-wrap:balance;word-break:keep-all}
+.era{font-size:.86rem;color:var(--jjok);letter-spacing:.06em}
+.story{font-size:1rem;line-height:1.9;text-align:left;margin:12px 0 4px;max-width:34ch;word-break:keep-all}
+.score{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:12px;width:100%}
+.score-label{font-size:.78rem;color:var(--ink-soft);letter-spacing:.3em}
+.score-num{font-family:var(--f-title);font-size:2.5rem;line-height:1;color:var(--seal);font-variant-numeric:tabular-nums}
+.score-num small{font-size:1.05rem;margin-left:2px}
+.score-tier{font-family:var(--f-brush);font-size:1.75rem;line-height:1}
+.bar{width:76%;height:3px;background:rgba(31,26,22,.18);overflow:visible;position:relative}
+.bar i{position:absolute;left:0;top:-2px;display:block;height:7px;width:0;background:var(--seal);border-radius:4px 1px 1px 4px;transition:width 1.2s cubic-bezier(.3,.7,.2,1)}
+.now{margin-top:16px;display:flex;flex-direction:column;gap:4px;max-width:34ch;padding-top:14px;border-top:1px solid rgba(31,26,22,.2)}
+.now b{font-family:var(--f-title);font-weight:400;color:var(--seal);letter-spacing:.25em;font-size:.9rem}
+.now p{margin:0;font-size:1rem;line-height:1.7;word-break:keep-all}
+.result .actions{margin-top:22px}
+
+.paper .ink{opacity:0;transform:translateY(5px);filter:blur(3px)}
+.paper.revealed .ink{animation:inkIn .7s ease-out forwards;animation-delay:calc(var(--d,0) * 130ms)}
+.paper.revealed .saja.ink{animation-name:inkSaja}
+@keyframes inkIn{to{opacity:1;transform:none;filter:none}}
+@keyframes inkSaja{from{opacity:0;filter:url(#ink) blur(6px)}to{opacity:1;filter:url(#ink)}}
+.seal{opacity:0}
+.paper.stamped .seal{animation:stamp .45s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes stamp{0%{opacity:0;transform:scale(2.4) rotate(-14deg)}70%{opacity:.95}100%{opacity:.92;transform:scale(1) rotate(-3deg)}}
+@media (prefers-reduced-motion:reduce){
+  .wrap,.bar i{transition:none}
+  .paper .ink{opacity:1;transform:none;filter:none}
+  .paper .saja.ink{filter:url(#ink)}
+  .paper.revealed .ink{animation:none}
+  .seal{opacity:.92}.paper.stamped .seal{animation:none}
+}
+</style>
+<style>body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="ink" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter>
+  <filter id="sealf" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.9" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in"/></filter>
+</svg>
+
+<div class="page">
+  <header class="masthead">
+    <h1>전생 인연서</h1>
+    <p>너랑 나, 전생에 무슨 사이였을까</p>
+  </header>
+
+  <div class="hang" aria-live="polite">
+    <svg class="cord" viewBox="0 0 200 46" preserveAspectRatio="none" aria-hidden="true"><path class="str" d="M4 46 L100 6 L196 46"/><circle class="nail" cx="100" cy="6" r="4.5"/></svg>
+    <div class="rod-top" aria-hidden="true"></div>
+    <div class="wrap" id="wrap">
+      <div class="mount" id="mount">
+        <div class="frame">
+          <div class="paper" id="paper">
+            <form id="formView" novalidate>
+              <div class="doc-head">
+                <span class="vert">前生因緣書</span>
+                <span class="ko">두 사람의 이름과 생일을<br>적어 주세요<small>같은 두 사람은 언제 해도 같은 결과가 나와요.</small></span>
+              </div>
+              <div class="people">
+                <fieldset class="person">
+                  <h2>첫 번째 사람</h2>
+                  <div class="field"><label for="n1">이름</label><input id="n1" maxlength="10" autocomplete="off" placeholder="예) 이몽룡"></div>
+                  <div class="field"><label for="b1">생일</label><input id="b1" type="date" min="1920-01-01" max="2026-12-31"></div>
+                </fieldset>
+                <fieldset class="person">
+                  <h2>두 번째 사람</h2>
+                  <div class="field"><label for="n2">이름</label><input id="n2" maxlength="10" autocomplete="off" placeholder="예) 성춘향"></div>
+                  <div class="field"><label for="b2">생일</label><input id="b2" type="date" min="1920-01-01" max="2026-12-31"></div>
+                </fieldset>
+              </div>
+              <p class="err" id="err"></p>
+              <div class="actions"><button class="btn btn-seal" type="submit">인연 펼쳐 보기</button></div>
+              <p class="fine">재미로 보는 전생 이야기예요.</p>
+            </form>
+            <div id="resultView" hidden></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rod-bot" aria-hidden="true"><span class="knob l"></span><span class="knob r"></span></div>
+  </div>
+  <p class="status" id="status">전생을 거슬러 올라가는 중…</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var wrap = document.getElementById("wrap");
+  var paper = document.getElementById("paper");
+  var form = document.getElementById("formView");
+  var resultView = document.getElementById("resultView");
+  var statusEl = document.getElementById("status");
+  var errEl = document.getElementById("err");
+
+  /* 한지 질감 */
+  try{
+    var c=document.createElement("canvas");c.width=c.height=384;
+    var x=c.getContext("2d");x.fillStyle="#ece0c3";x.fillRect(0,0,384,384);
+    for(var b=0;b<7;b++){var gx=Math.random()*384,gy=Math.random()*384,gr=40+Math.random()*90;var g=x.createRadialGradient(gx,gy,0,gx,gy,gr);g.addColorStop(0,"rgba(170,130,70,.10)");g.addColorStop(1,"rgba(170,130,70,0)");x.fillStyle=g;x.fillRect(0,0,384,384);}
+    var d=x.getImageData(0,0,384,384);
+    for(var i=0;i<d.data.length;i+=4){var n=(Math.random()-.5)*14;d.data[i]+=n;d.data[i+1]+=n;d.data[i+2]+=n*.85;}
+    x.putImageData(d,0,0);
+    x.lineCap="round";
+    for(var f=0;f<150;f++){x.strokeStyle="rgba("+(Math.random()<.5?"130,100,60":"255,250,235")+","+(.12+Math.random()*.18)+")";x.lineWidth=.4+Math.random()*.8;x.beginPath();var px=Math.random()*384,py=Math.random()*384;x.moveTo(px,py);
+      for(var k=0;k<5;k++){px+=(Math.random()-.5)*28;py+=(Math.random()-.5)*28;x.quadraticCurveTo(px+(Math.random()-.5)*10,py+(Math.random()-.5)*10,px,py);}x.stroke();}
+    paper.style.setProperty("--tex","url("+c.toDataURL()+")");
+  }catch(e){}
+
+  /* 조사 */
+  var JOSA={"은":["은","는"],"이":["이","가"],"을":["을","를"],"과":["과","와"]};
+  function batchim(s){var ch=s.charCodeAt(s.length-1);if(ch<0xAC00||ch>0xD7A3)return false;return (ch-0xAC00)%28!==0;}
+  function fill(t,A,B){
+    return t.replace(/\{(A|B)(?::(은|이|을|과))?\}/g,function(m,w,j){
+      var nm=w==="A"?A:B; if(!j) return nm; var p=JOSA[j]; return nm+(batchim(nm)?p[0]:p[1]);
+    });
+  }
+
+  /* 전생 이야기 */
+  var LIVES=[
+    {saja:"以心傳心",read:"이심전심",mean:"말하지 않아도 마음이 통함",rel:"주막 주모와 단골 나그네",era:"조선 후기 · 문경새재 아래 주막",
+     story:"{A:은} 문경새재 아래에서 주막을 하던 주모, {B:은} 과거 보러 가는 길마다 들르던 단골 나그네였어요. {B:이} 세 번 낙방하는 동안 {A:은} 아무것도 묻지 않고 국밥에 고기 한 점씩만 더 얹어 줬대요. 네 번째 해, {B:은} 급제 소식을 들고 제일 먼저 그 주막 문을 열었습니다.",
+     now:"말 안 해도 서로 컨디션을 알아채는 사이. 다음 밥은 {B:이} 사는 걸로."},
+    {saja:"敎學相長",read:"교학상장",mean:"가르치고 배우며 서로 함께 자람",rel:"서당 훈장과 말썽꾸러기 학동",era:"조선 중기 · 안동 산골 서당",
+     story:"{A:은} 안동 산골 서당의 깐깐한 훈장님, {B:은} 천자문을 거꾸로 외우던 말썽꾸러기였어요. 낮에는 회초리를 들었지만 {A:은} 밤마다 {B}의 몫으로 군밤을 남겨 뒀대요. 훗날 {B:은} 그 서당의 다음 훈장이 되었습니다.",
+     now:"잔소리하는 쪽도 듣는 쪽도 결국 같은 편인 사이."},
+    {saja:"同苦同樂",read:"동고동락",mean:"괴로움도 즐거움도 함께함",rel:"수라간 최고참 상궁과 막내 나인",era:"조선 · 한양 경복궁 수라간",
+     story:"{A:은} 경복궁 수라간의 최고참 상궁, {B:은} 갓 들어온 막내 나인이었어요. {B:이} 임금님 수라상에 간장 대신 식초를 올린 날, {A:은} 자기 실수라며 대신 벌을 받았대요. 그 뒤로 둘은 서른 해 동안 한 부엌을 지켰습니다.",
+     now:"같이 맛집에 가면 실패가 없는 조합."},
+    {saja:"龍虎相搏",read:"용호상박",mean:"용과 범이 겨루듯 막상막하인 맞수",rel:"같은 날 과거를 본 두 선비",era:"조선 후기 · 한양 과거 시험장",
+     story:"{A:과} {B:은} 같은 날 같은 시험장에 앉은 두 선비였어요. 장원은 단 한 명인데 둘의 답안 점수가 똑같았대요. 임금이 시 한 수씩을 더 짓게 했지만 또 무승부. 결국 그해만 장원이 둘 나왔습니다.",
+     now:"은근히 경쟁하지만 그래서 서로를 키워 주는 사이."},
+    {saja:"結草報恩",read:"결초보은",mean:"죽어서도 잊지 않고 은혜를 갚음",rel:"금강산 호랑이와 나무꾼",era:"아주 먼 옛날 · 금강산 깊은 골짜기",
+     story:"{A:은} 금강산의 호랑이, {B:은} 덫에 걸린 {A:을} 풀어 준 나무꾼이었어요. 그날 이후 {B}의 집 앞에는 아침마다 산삼과 꿩이, 가끔은 영문 모를 짚신 한 짝이 놓여 있었대요.",
+     now:"{A:은} 표현이 서툴러도 받은 마음은 꼭 갚는 사람."},
+    {saja:"知己之友",read:"지기지우",mean:"나를 알아주는 참된 벗",rel:"판소리 소리꾼과 북 치는 고수",era:"조선 후기 · 전주 소리 마당",
+     story:"{A:은} 전주 소리 마당의 소리꾼, {B:은} 북을 치던 고수였어요. {B}의 장단이 없으면 {A:은} 첫 소리를 내지 않았대요. '일고수 이명창', 북 치는 사람이 먼저라는 말이 둘 때문에 생겼다는 소문도 있습니다.",
+     now:"둘이 같이 있을 때 텐션이 제일 좋은 사이."},
+    {saja:"犬猿之間",read:"견원지간",mean:"개와 원숭이처럼 사이가 나쁨 (겉으로만)",rel:"의적과 그를 쫓던 포졸",era:"조선 · 지리산 자락 고을",
+     story:"{A:은} 탐관오리 곳간만 털던 의적, {B:은} 십 년째 {A:을} 쫓던 포졸이었어요. 잡을 뻔한 날마다 {B:은} 일부러 한 발 늦게 뛰었다는 소문이 돌았죠. 장터 국밥집에서 둘이 나란히 밥 먹는 걸 봤다는 사람도 있대요.",
+     now:"티격태격해도 밖에서는 서로 편들어 주는 사이."},
+    {saja:"錦上添花",read:"금상첨화",mean:"비단 위에 꽃을 더함",rel:"청자 빚는 도공과 학을 새기는 화공",era:"고려 · 강진 청자 가마터",
+     story:"{A:은} 강진 가마터에서 청자를 빚던 도공, {B:은} 그 위에 학과 구름을 새기던 화공이었어요. {A}의 그릇에 {B}의 학이 올라가면 개경에서 사람이 찾아왔대요. 그중 하나는 지금도 어느 박물관 유리장 안에 있을지 몰라요.",
+     now:"같이 뭘 만들면 결과물이 두 배로 좋아지는 사이."},
+    {saja:"水魚之交",read:"수어지교",mean:"물과 물고기처럼 떨어질 수 없는 사이",rel:"상군 해녀와 뱃사공",era:"조선 · 제주 바닷가 마을",
+     story:"{A:은} 제주 바다의 상군 해녀, {B:은} 물질 나가는 배를 몰던 뱃사공이었어요. 파도가 높은 날에도 {B:은} 노를 놓지 않았고, {A:은} 늘 전복 하나를 몰래 {B}의 바구니에 넣어 줬대요.",
+     now:"서로 없으면 일이 안 굴러가는 사이."},
+    {saja:"呼兄呼弟",read:"호형호제",mean:"형 아우 하며 가깝게 지냄",rel:"장터 엿장수와 단골 꼬마",era:"조선 후기 · 개성 장터",
+     story:"{A:은} 개성 장터에서 가위 소리로 유명한 엿장수, {B:은} 날마다 헌 짚신 한 짝을 들고 오던 단골 꼬마였어요. 짚신이 없는 날에도 {A:은} 엿 한 가락을 툭 잘라 줬대요. {B:은} 커서 개성에서 제일 큰 상점을 열고 첫 간판 글씨를 {A}에게 부탁했습니다.",
+     now:"{A:은} {B}에게 자꾸 뭘 사 주고 싶어지는 사람."},
+    {saja:"寤寐不忘",read:"오매불망",mean:"자나 깨나 잊지 못함",rel:"대감댁 고양이와 막내 아씨",era:"조선 · 한양 북촌 대감댁",
+     story:"{A:은} 북촌 대감댁 대청마루를 차지한 고양이, {B:은} 그 집 막내 아씨였어요. {B:이} 시집가던 날 {A:은} 가마 지붕에 올라앉아 내려오지 않았대요. 결국 {A}도 혼수 목록에 올라갔습니다.",
+     now:"{B} 옆에 있으면 {A:이} 이유 없이 편안해지는 사이."},
+    {saja:"莫逆之友",read:"막역지우",mean:"서로 거스를 것 없는 허물없는 벗",rel:"임금과 바둑 두는 내시",era:"조선 · 창덕궁 후원 정자",
+     story:"{A:은} 나랏일에 지친 임금, {B:은} 밤마다 후원 정자에서 바둑을 두던 내시였어요. {B:은} 일부러 져 주지 않는 유일한 사람이었고, {A:은} 그래서 {B}만 찾았대요. 둘의 마지막 판은 아직 끝나지 않았다는 이야기가 전해집니다.",
+     now:"봐주지 않고 솔직하게 말해 주는 사이."},
+    {saja:"肝膽相照",read:"간담상조",mean:"속마음까지 터놓고 지냄",rel:"방물장수와 단골 아씨",era:"조선 후기 · 전주 한옥 골목",
+     story:"{A:은} 노리개와 분, 비단실을 지고 다니던 방물장수, {B:은} 담장 너머로 {A:을} 기다리던 아씨였어요. 둘은 물건보다 바깥세상 이야기를 더 많이 주고받았대요. {B:은} 그 이야기들을 몰래 책으로 엮었습니다.",
+     now:"만나면 수다가 끝나지 않는 사이."},
+    {saja:"患難相恤",read:"환난상휼",mean:"어려운 일을 당하면 서로 도움",rel:"사신단 통역관과 호위 무관",era:"조선 · 한양에서 연경 가는 길",
+     story:"{A:은} 연경으로 가는 사신단의 통역관, {B:은} 곁을 지키던 호위 무관이었어요. 석 달 길 위에서 {A:은} 말로, {B:은} 칼로 서로를 구했대요. 돌아오는 길에는 둘만 아는 암호가 열두 개쯤 생겨 있었습니다.",
+     now:"같이 여행 가면 손발이 척척 맞는 사이."},
+    {saja:"天生緣分",read:"천생연분",mean:"하늘이 미리 정해 준 인연",rel:"강을 사이에 두고 마주 본 두 집",era:"조선 · 남한강 나루터",
+     story:"{A:과} {B:은} 남한강을 사이에 두고 마주 보는 두 집에 살았어요. 매일 저녁 같은 시각에 등불을 켰는데 누가 먼저 시작했는지는 끝내 아무도 몰랐대요. 그 등불은 쉰 해 동안 하루도 거른 적이 없습니다.",
+     now:"말 안 해도 같은 타이밍에 연락하는 사이."},
+    {saja:"一心同體",read:"일심동체",mean:"한마음 한 몸처럼 굳게 뭉침",rel:"활 만드는 궁장과 명궁",era:"조선 · 예천 활터",
+     story:"{A:은} 예천에서 각궁을 만들던 궁장, {B:은} 그 활만 고집하던 명궁이었어요. {B}의 화살이 백오십 보 밖 과녁에 꽂힐 때마다 {A:은} 활터 뒤에서 혼자 주먹을 불끈 쥐었대요.",
+     now:"서로의 성공을 내 일처럼 기뻐하는 사이."},
+    {saja:"刎頸之交",read:"문경지교",mean:"목숨을 내놓아도 아깝지 않은 사귐",rel:"판옥선 선장과 노 젓는 격군",era:"조선 · 남해 한산도 앞바다",
+     story:"{A:은} 판옥선을 이끌던 선장, {B:은} 맨 아래 칸에서 노를 젓던 격군이었어요. 배가 뒤집힐 뻔한 날 {B:이} 끝까지 노를 놓지 않아 모두가 살았대요. 그날 이후 {A:은} 출항할 때마다 {B}의 자리부터 확인했습니다.",
+     now:"위기 때 제일 먼저 생각나는 사이."},
+    {saja:"竹馬故友",read:"죽마고우",mean:"어릴 때부터 함께 자란 오랜 벗",rel:"연싸움 맞수였던 바닷가 마을 아이들",era:"조선 · 강릉 바닷가 마을",
+     story:"{A:과} {B:은} 정월 대보름마다 연싸움을 붙던 동네 맞수였어요. 연줄에 사기 가루를 먹이는 비법을 서로 몰래 훔쳐 배웠대요. 둘 다 백발이 된 뒤에도 대보름엔 꼭 같이 연을 날렸습니다.",
+     now:"어릴 적 이야기만 꺼내면 끝이 없는 사이."},
+    {saja:"鴛鴦之契",read:"원앙지계",mean:"원앙처럼 금슬 좋은 사이",rel:"나루터 떡집 주인 내외",era:"조선 · 공주 금강 나루터",
+     story:"{A:과} {B:은} 금강 나루터에서 떡집을 하던 내외였어요. {A:이} 떡메를 치면 {B:이} 박자에 맞춰 반죽을 뒤집었는데, 그 소리가 하도 잘 맞아서 뱃사공들이 노 젓는 장단으로 썼대요.",
+     now:"둘이 하면 손발이 리듬처럼 맞는 사이."},
+    {saja:"磨斧作針",read:"마부작침",mean:"도끼를 갈아 바늘을 만들 만큼 꾸준히 노력함",rel:"대장장이와 견습생",era:"신라 · 서라벌 대장간",
+     story:"{A:은} 서라벌 대장간의 대장장이, {B:은} 망치질만 삼 년째 하던 견습생이었어요. {A:은} 칭찬 한마디 없이 쇠만 계속 내밀었대요. {B:이} 처음 칼을 완성한 날, {A:은} 그 칼에 자기 이름 대신 {B}의 이름을 새겼습니다.",
+     now:"{A:은} 말보다 행동으로 {B:을} 밀어 주는 사람."},
+    {saja:"相扶相助",read:"상부상조",mean:"서로 붙들어 주고 도움",rel:"팔도를 함께 누빈 보부상 둘",era:"조선 후기 · 팔도 장터길",
+     story:"{A:은} 소금을 지고, {B:은} 무명을 지고 팔도를 같이 걷던 보부상이었어요. 한 사람이 다리를 다치면 다른 사람이 두 짐을 다 졌대요. 둘의 물미장은 지금도 어느 장터 사당에 나란히 걸려 있다는 이야기가 있습니다.",
+     now:"아무리 먼 길도 혼자가 아니라고 느끼게 해 주는 사이."},
+    {saja:"二人同心",read:"이인동심",mean:"두 사람이 한마음이면 쇠도 끊음",rel:"화성 성벽을 쌓던 석수 둘",era:"조선 · 수원 화성 공사장",
+     story:"{A:과} {B:은} 화성 성벽을 쌓던 석수였어요. 둘이 맞춘 돌은 칼날 하나 들어갈 틈이 없었대요. 감독관이 누가 쌓았느냐고 묻자 둘은 서로의 이름을 댔습니다.",
+     now:"잘된 일의 공을 서로에게 돌리는 사이."},
+    {saja:"金蘭之交",read:"금란지교",mean:"쇠처럼 단단하고 난초처럼 향기로운 우정",rel:"수방에서 함께 수놓던 두 동무",era:"조선 · 한양 운종가 수방",
+     story:"{A:과} {B:은} 운종가 수방에서 나란히 앉아 수를 놓던 동무였어요. {A:이} 꽃을 놓으면 {B:이} 나비를 놓아 한 폭을 완성했대요. 둘이 함께 놓은 병풍은 혼례 때마다 빌려 달라는 사람이 줄을 섰습니다.",
+     now:"같이 있으면 서로의 장점이 더 빛나는 사이."},
+    {saja:"管鮑之交",read:"관포지교",mean:"서로를 깊이 이해하고 믿는 벗",rel:"동업하던 소금장수와 젓갈장수",era:"조선 후기 · 강경 포구",
+     story:"{A:은} 소금장수, {B:은} 젓갈장수였어요. 장사가 안 되던 해에 {A:이} 몫을 더 가져가도 {B:은} 집에 무슨 사정이 있겠거니 하고 아무 말 안 했대요. 이듬해 {A:은} 그 두 배를 몰래 {B}의 독에 채워 놓았습니다.",
+     now:"계산하지 않아도 결국 공평해지는 사이."},
+    {saja:"靑出於藍",read:"청출어람",mean:"제자가 스승보다 나음",rel:"도화서 화원 스승과 제자",era:"조선 · 한양 도화서",
+     story:"{A:은} 도화서의 이름난 화원, {B:은} 붓 잡는 법부터 배운 제자였어요. 어느 날 임금이 두 사람의 그림을 나란히 걸고 {B}의 그림을 골랐대요. {A:은} 그날 처음으로 크게 웃었습니다.",
+     now:"{A:은} {B}의 성장을 누구보다 자랑스러워하는 사람."},
+    {saja:"犬馬之勞",read:"견마지로",mean:"개나 말처럼 정성을 다해 힘씀",rel:"고구려 장수와 그의 애마",era:"고구려 · 요동 벌판",
+     story:"{A:은} 요동 벌판을 달리던 고구려 장수, {B:은} 그를 태우던 붉은 갈기의 말이었어요. {B:은} {A}의 휘파람 한 번이면 십 리 밖에서도 돌아왔대요. 전쟁이 끝난 뒤 {A:은} {B}에게 가장 좋은 풀밭을 평생 내주었습니다.",
+     now:"말 안 해도 서로의 신호를 알아채는 사이."},
+    {saja:"刮目相對",read:"괄목상대",mean:"눈을 비비고 다시 볼 만큼 실력이 늚",rel:"단오 씨름판의 두 장사",era:"조선 · 단오날 씨름판",
+     story:"{A:은} 단오 씨름판에서 삼 년 내리 황소를 탄 장사, {B:은} 해마다 첫판에서 지던 젊은이였어요. 네 번째 단오에 {B:이} {A:을} 모래판에 눕혔대요. {A:은} 웃으며 황소 고삐를 {B}에게 넘겼습니다.",
+     now:"서로 자극이 되어 같이 크는 사이."},
+    {saja:"百年佳約",read:"백년가약",mean:"평생을 함께하자는 아름다운 약속",rel:"피리 부는 화랑과 다리 건너 사는 낭자",era:"신라 · 서라벌 월정교",
+     story:"{A:은} 달밤마다 월정교에서 피리를 불던 화랑, {B:은} 다리 건너에서 그 소리를 듣던 낭자였어요. 피리 소리가 끊긴 밤이면 {B:이} 먼저 다리를 건너왔대요.",
+     now:"한쪽이 조용하면 다른 쪽이 먼저 다가가는 사이."},
+    {saja:"三顧草廬",read:"삼고초려",mean:"인재를 얻으려 끈기 있게 정성을 다함",rel:"고을 사또와 산속에 숨어 살던 의원",era:"조선 · 속리산 자락",
+     story:"{A:은} 역병이 돈 고을의 사또, {B:은} 속리산에 숨어 살던 의원이었어요. {A:은} 두 번 문전박대를 당하고도 세 번째에 약초 지게를 직접 지고 올라갔대요. {B:은} 그 지게를 보고 짐을 쌌습니다.",
+     now:"{A:은} {B:을} 내 편으로 만들 때까지 포기하지 않는 사람."},
+    {saja:"同床異夢",read:"동상이몽",mean:"같은 자리에서 서로 다른 꿈을 꿈",rel:"한 방을 나눠 쓰던 하숙 동무",era:"조선 · 한양 반촌 하숙집",
+     story:"{A:과} {B:은} 반촌 하숙집 한 방을 나눠 쓰던 사이였어요. {A:은} 장원 급제를, {B:은} 옆집 국밥집 인수를 꿈꿨대요. 결국 {A:은} 벼슬을 얻고 {B:은} 국밥집 주인이 되었는데, 둘 다 상대 꿈이 더 좋아 보였답니다.",
+     now:"가는 길은 달라도 서로를 제일 열심히 응원하는 사이."},
+    {saja:"狐假虎威",read:"호가호위",mean:"남의 위세를 빌려 큰소리침",rel:"고을 사또와 꾀 많은 이방",era:"조선 · 남원 관아",
+     story:"{A:은} 남원 관아의 사또, {B:은} 꾀 많은 이방이었어요. {B:은} 장터에서 곤란할 때마다 사또 이름을 팔았는데, {A:은} 알면서도 모른 척했대요. 덕분에 남원 장터의 시비는 늘 {B:이} 해결했습니다.",
+     now:"{B:이} {A} 이름만 대면 다 통하는 사이."},
+    {saja:"有備無患",read:"유비무환",mean:"미리 준비하면 걱정이 없음",rel:"남산 봉수대의 봉수군 둘",era:"조선 · 한양 남산 봉수대",
+     story:"{A:과} {B:은} 남산 봉수대에서 번갈아 불을 지키던 봉수군이었어요. {A:은} 늘 마른 장작을, {B:은} 늘 여분의 부싯돌을 챙겼대요. 비가 쏟아지던 밤에도 둘의 봉화만은 꺼지지 않았습니다.",
+     now:"한 명이 놓친 걸 다른 한 명이 꼭 챙기는 사이."},
+    {saja:"同價紅裳",read:"동가홍상",mean:"같은 값이면 다홍치마",rel:"포목전 주인과 깐깐한 단골손님",era:"조선 후기 · 대구 서문시장 포목전",
+     story:"{A:은} 서문시장 포목전 주인, {B:은} 같은 값이면 꼭 더 고운 천을 골라 가던 깐깐한 단골이었어요. {A:은} 좋은 천이 들어오면 {B}의 몫부터 따로 빼 두었대요. 둘의 흥정은 시장의 구경거리였습니다.",
+     now:"취향을 너무 잘 알아서 선물 고르기 쉬운 사이."},
+    {saja:"苦盡甘來",read:"고진감래",mean:"고생 끝에 즐거움이 옴",rel:"토종벌 치던 사람과 약방 주인",era:"조선 · 태백산 자락 마을",
+     story:"{A:은} 태백산 자락에서 토종벌을 치던 사람, {B:은} 해마다 꿀을 받으러 오던 약방 주인이었어요. 벌이 다 떠난 흉년에도 {B:은} 빈 지게로 산에 올라와 같이 벌통을 손봤대요. 이듬해 꿀은 그 마을에서 가장 달았습니다.",
+     now:"힘든 시기를 같이 버틴 만큼 단단해지는 사이."},
+    {saja:"風月主人",read:"풍월주인",mean:"맑은 바람과 밝은 달을 즐기는 풍류객",rel:"뱃놀이 시인과 가야금 악공",era:"조선 · 평양 대동강",
+     story:"{A:은} 대동강 뱃놀이에서 즉석으로 시를 읊던 시인, {B:은} 그 시에 맞춰 가야금을 뜯던 악공이었어요. {A:이} 한 줄을 다 읊기도 전에 {B:은} 다음 가락을 알고 있었대요.",
+     now:"같이 놀 때 제일 재밌는 사이."},
+    {saja:"錦衣還鄕",read:"금의환향",mean:"성공해서 고향에 돌아옴",rel:"바다 건너 떠난 상인과 포구에서 기다린 친구",era:"조선 · 통영 포구",
+     story:"{A:은} 큰 배를 타고 바다 건너로 떠난 젊은 상인, {B:은} 통영 포구에서 그 배를 배웅한 친구였어요. {B:은} 십 년 동안 해마다 같은 날 포구에 나갔대요. 열한 번째 해, 비단옷을 입은 {A:이} 배에서 제일 먼저 뛰어내렸습니다.",
+     now:"오래 못 봐도 다시 만나면 어제 본 것 같은 사이."},
+    {saja:"大器晩成",read:"대기만성",mean:"큰 그릇은 늦게 이루어짐",rel:"퇴역 군관과 늦깎이 무과 응시생",era:"조선 · 강화도 연무당",
+     story:"{A:은} 강화도 연무당의 퇴역 군관, {B:은} 서른 넘어 활을 처음 잡은 늦깎이였어요. 다들 늦었다고 했지만 {A:은} 매일 새벽 {B}의 활시위를 먼저 매어 두었대요. {B:은} 마흔에 무과에 급제했습니다.",
+     now:"{A:은} {B}의 가능성을 제일 먼저 믿어 주는 사람."},
+    {saja:"塞翁之馬",read:"새옹지마",mean:"인생의 좋고 나쁜 일은 미리 알 수 없음",rel:"국경 마을에서 말을 기르던 이웃",era:"조선 · 함경도 국경 마을",
+     story:"{A:과} {B:은} 국경 마을에서 담장을 맞댄 이웃이었어요. {A}의 말이 도망간 날 {B:이} 위로했고, 그 말이 야생마를 데리고 돌아온 날 둘이 함께 잔치를 열었대요. 좋은 일이든 나쁜 일이든 둘은 늘 반반 나눴습니다.",
+     now:"기쁜 일도 속상한 일도 제일 먼저 말하는 사이."},
+    {saja:"結者解之",read:"결자해지",mean:"맺은 사람이 풀어야 함",rel:"매듭장과 매듭을 엉키게 한 손님",era:"조선 · 한양 매듭방",
+     story:"{A:은} 한양 매듭방의 매듭장, {B:은} 선물 받은 노리개 매듭을 풀다 더 엉키게 만든 손님이었어요. {A:은} 웃으며 풀어 주고는 새 매듭을 하나 더 지어 줬대요. {B:은} 그 뒤로 매듭이 엉킬 때마다 일부러 찾아갔습니다.",
+     now:"서운한 일이 생겨도 금방 다시 풀리는 사이."},
+    {saja:"鶴首苦待",read:"학수고대",mean:"학처럼 목을 길게 빼고 애타게 기다림",rel:"역참의 파발꾼과 편지를 기다리던 사람",era:"조선 · 충주 역참",
+     story:"{A:은} 충주 역참을 지나던 파발꾼, {B:은} 날마다 역참 앞에서 편지를 기다리던 사람이었어요. 편지가 없는 날에도 {A:은} 말을 세우고 길 소식을 한 보따리 전해 주고 갔대요. 나중에 알고 보니 {B:이} 기다린 건 편지가 아니라 {A}였다는 이야기가 있습니다.",
+     now:"연락이 오면 괜히 기분이 좋아지는 사이."},
+    {saja:"琴瑟相和",read:"금슬상화",mean:"거문고와 비파가 잘 어울리듯 사이가 좋음",rel:"거문고 악사와 비파 악사",era:"조선 · 한양 장악원",
+     story:"{A:은} 장악원에서 거문고를 타던 악사, {B:은} 비파를 타던 악사였어요. 둘이 합주하는 날이면 임금이 다른 일정을 미뤘대요. 한 사람이 줄을 끊어 먹은 날엔 다른 사람도 일부러 한 줄을 빼고 탔습니다.",
+     now:"한 사람이 실수하면 다른 사람이 자연스럽게 맞춰 주는 사이."},
+    {saja:"相思相愛",read:"상사상애",mean:"서로 그리워하고 아끼는 사이",rel:"은행나무 아래 장터에서 매번 마주친 두 사람",era:"조선 · 양평 용문사 은행나무 아래",
+     story:"{A:과} {B:은} 닷새마다 서는 장날이면 꼭 같은 은행나무 아래에서 마주쳤어요. 말 한마디 못 건넨 채 일 년이 지났는데, 알고 보니 둘 다 상대를 보려고 장에 나왔던 거였대요.",
+     now:"서로 먼저 연락하길 기다리고 있을지도 모르는 사이."},
+    {saja:"意氣投合",read:"의기투합",mean:"마음과 뜻이 서로 잘 맞음",rel:"탈춤판의 두 광대",era:"조선 · 안동 하회마을",
+     story:"{A:은} 양반탈을, {B:은} 말뚝이탈을 쓰던 광대였어요. 탈판에서는 서로 구박하는 역할이었지만 대사는 늘 둘이 밤새 같이 짰대요. 구경꾼들이 제일 크게 웃은 대목은 다 즉흥이었습니다.",
+     now:"같이 있으면 아이디어가 끝없이 나오는 사이."},
+    {saja:"一日三秋",read:"일일삼추",mean:"하루가 삼 년처럼 길게 느껴질 만큼 기다림",rel:"유배 간 선비와 편지를 보내던 벗",era:"조선 · 흑산도 유배지",
+     story:"{A:은} 흑산도로 유배 간 선비, {B:은} 뭍에서 다달이 편지를 보내던 벗이었어요. 배가 끊긴 겨울에도 {B:은} 편지를 써서 차곡차곡 모아 두었대요. 봄에 도착한 편지 꾸러미는 책 한 권만 했습니다.",
+     now:"멀리 있어도 마음은 늘 가까운 사이."},
+    {saja:"和氣靄靄",read:"화기애애",mean:"따뜻하고 화목한 기운이 가득함",rel:"정월 윷판의 두 맞수 이웃",era:"조선 · 정월 대보름 마을 윷판",
+     story:"{A:과} {B:은} 정월마다 윷판에서 맞붙던 이웃이었어요. 모가 나오면 둘이 같이 소리 지르고, 낙이 나오면 둘이 같이 웃었대요. 누가 이겼는지는 아무도 기억하지 못했습니다.",
+     now:"승부보다 같이 노는 게 더 즐거운 사이."},
+    {saja:"易地思之",read:"역지사지",mean:"처지를 바꾸어 생각해 봄",rel:"하루 옷을 바꿔 입은 원님과 나무꾼",era:"조선 · 청주 고을",
+     story:"{A:은} 청주 고을 원님, {B:은} 관아에 나무를 대던 나무꾼이었어요. 내기 끝에 하루 옷을 바꿔 입었는데, {A:은} 지게를 지고 반나절 만에 주저앉았고 {B:은} 쌓인 문서를 보고 그대로 잠들었대요. 그 뒤로 둘은 서로의 일을 함부로 말하지 않았습니다.",
+     now:"서로 입장을 잘 헤아려 주는 사이."},
+    {saja:"刻骨難忘",read:"각골난망",mean:"입은 은혜가 뼈에 새겨져 잊히지 않음",rel:"물에 빠진 아이와 건져 준 뱃사람",era:"조선 · 한강 마포나루",
+     story:"{A:은} 마포나루의 뱃사람, {B:은} 나루에서 놀다 물에 빠진 아이였어요. {A:이} 옷도 벗지 않고 뛰어들어 {B:을} 건졌대요. 어른이 된 {B:은} 해마다 그날이면 {A}의 집 앞에 쌀 한 섬을 놓고 갔습니다.",
+     now:"받은 고마움을 오래 기억하는 사이."},
+    {saja:"雪中送炭",read:"설중송탄",mean:"눈 속에 숯을 보내 줌, 어려울 때 도움",rel:"숯장수와 가난한 선비",era:"조선 · 한양 남산골",
+     story:"{A:은} 겨울마다 숯을 지고 다니던 숯장수, {B:은} 남산골 냉골 방에서 글을 읽던 가난한 선비였어요. {A:은} 값을 받지 않고 숯 한 짐씩을 툭 내려놓고 갔대요. 훗날 {B:은} 그 숯 값을 셈해서 열 배로 갚았습니다.",
+     now:"힘들 때 말 안 해도 먼저 알아채고 챙겨 주는 사이."},
+    {saja:"好事多魔",read:"호사다마",mean:"좋은 일에는 방해가 많음",rel:"혼롓날 사고가 연달아 터진 신랑 신부",era:"조선 · 안성 장터 마을",
+     story:"{A:과} {B}의 혼롓날, 가마꾼이 넘어지고 닭이 상 위로 날아오르고 장대비까지 쏟아졌대요. 하객들은 걱정했지만 둘은 젖은 채로 맞절하며 내내 웃었습니다. 그 혼례는 마을에서 오십 년 동안 회자됐대요.",
+     now:"일이 꼬여도 둘이면 웃고 넘어가는 사이."},
+    {saja:"天高馬肥",read:"천고마비",mean:"하늘은 높고 말은 살찌는 좋은 계절",rel:"추수 끝나고 함께 말을 달린 목동 둘",era:"조선 · 제주 목장",
+     story:"{A:과} {B:은} 제주 목장에서 말을 돌보던 목동이었어요. 가을걷이가 끝나는 날이면 둘은 제일 빠른 말을 골라 한라산 아래 들판을 끝까지 달렸대요. 결승선은 늘 아무도 정하지 않았습니다.",
+     now:"같이 있으면 계절이 더 좋게 느껴지는 사이."},
+    {saja:"一擧兩得",read:"일거양득",mean:"한 가지 일로 두 가지 이득을 봄",rel:"물물교환하던 낚시꾼과 나물 캐는 사람",era:"조선 · 정선 장터",
+     story:"{A:은} 동강에서 고기를 낚던 낚시꾼, {B:은} 산에서 나물을 캐던 사람이었어요. 둘은 장날마다 물고기와 나물을 바꿨는데, 덕분에 두 집 밥상만 늘 반찬이 두 배였대요.",
+     now:"서로 부족한 걸 채워 주는 사이."},
+    {saja:"自强不息",read:"자강불식",mean:"스스로 힘쓰며 쉬지 않음",rel:"한글을 서로 가르쳐 준 두 장인",era:"조선 세종 때 · 한양 저잣거리",
+     story:"{A:은} 옹기를 굽고 {B:은} 짚신을 삼던 장인이었어요. 새 글자가 반포되자 둘은 일이 끝난 밤마다 서로 아는 글자를 가르쳐 줬대요. 한 달 만에 둘은 서로에게 편지를 쓸 수 있게 되었습니다.",
+     now:"같이 공부하면 진도가 쭉쭉 나가는 사이."},
+    {saja:"莫上莫下",read:"막상막하",mean:"누가 낫고 못한지 가리기 어려움",rel:"정자 아래 장기판 맞수",era:"조선 · 전주 덕진연못 정자",
+     story:"{A:과} {B:은} 연못가 정자 아래에서 날마다 장기를 두던 맞수였어요. 이십 년 동안 전적을 세어 보니 정확히 천 승 천 패였대요. 둘은 그날 장기판을 접고 같이 국수를 먹으러 갔습니다.",
+     now:"싸워도 결국 비기는 사이. 그래서 오래가요."},
+    {saja:"百年知己",read:"백년지기",mean:"오랜 세월 깊이 알아 온 벗",rel:"같은 날 태어난 한마을 아이들",era:"조선 · 김해 마을",
+     story:"{A:과} {B:은} 같은 날 한마을에서 태어났어요. 돌잔치도 한 마당에서 같이 했고, 돌잡이에서 둘 다 같은 붓을 잡으려다 붓이 반으로 부러졌대요. 둘은 그 반쪽 붓을 평생 나눠 가졌습니다.",
+     now:"처음 만난 날이 기억 안 날 만큼 편한 사이."},
+    {saja:"花朝月夕",read:"화조월석",mean:"꽃 피는 아침과 달 뜨는 저녁, 좋은 시절",rel:"소나기를 피해 같은 정자에 들어온 두 사람",era:"신라 · 서라벌 반월성",
+     story:"{A:과} {B:은} 꽃구경 길에 쏟아진 소나기를 피해 같은 정자에 들어왔어요. 비가 그칠 때까지 이야기하다 보니 해가 졌고, 달이 뜰 때까지 또 이야기했대요. 그 뒤로 둘은 비 오는 날마다 그 정자에 갔습니다.",
+     now:"대화가 끊기지 않는 사이."},
+    {saja:"一笑一少",read:"일소일소",mean:"한 번 웃으면 한 번 젊어짐",rel:"이야기책 읽어 주던 전기수와 맨 앞자리 단골",era:"조선 후기 · 한양 종로 이야기판",
+     story:"{A:은} 종로에서 이야기책을 읽어 주던 전기수, {B:은} 날마다 맨 앞자리에 앉던 단골이었어요. {B:이} 웃음을 터뜨리는 대목에서 {A:은} 꼭 한 번 더 읽어 줬대요. 그 덕에 둘 다 동네에서 제일 젊어 보였답니다.",
+     now:"서로 웃게 만드는 게 제일 쉬운 사이."},
+    {saja:"安分知足",read:"안분지족",mean:"제 분수를 알고 만족하며 삶",rel:"차밭 오두막에서 함께 차를 덖던 두 사람",era:"조선 · 하동 차밭",
+     story:"{A:과} {B:은} 하동 산비탈 차밭 오두막에서 차를 덖던 사이였어요. 큰돈을 주겠다는 상인이 찾아와도 둘은 한 해 마실 만큼만 만들었대요. 남는 시간에는 마루에 앉아 산만 봤습니다.",
+     now:"같이 있으면 마음이 조용해지는 사이."},
+    {saja:"先見之明",read:"선견지명",mean:"앞일을 미리 내다보는 밝은 지혜",rel:"구름 보고 날씨를 맞히던 노인과 그 말을 믿은 뱃사람",era:"조선 · 여수 포구",
+     story:"{A:은} 구름만 보고 날씨를 맞히던 포구의 노인, {B:은} 그 말만 믿고 배를 띄우던 뱃사람이었어요. 다들 맑은 날이라며 나간 날, {A:이} 말린 덕에 {B}의 배만 무사했대요.",
+     now:"{B:은} {A}의 촉을 믿고 따라가면 손해 안 보는 사이."},
+    {saja:"掌中寶玉",read:"장중보옥",mean:"손바닥 안의 보옥처럼 귀히 여김",rel:"매사냥꾼과 그의 매",era:"고려 · 개경 교외 사냥터",
+     story:"{A:은} 개경 교외의 이름난 매사냥꾼, {B:은} 그가 새끼 때부터 키운 매였어요. {B:은} 하늘 끝까지 날아갔다가도 {A}의 팔뚝으로만 내려앉았대요. {A:은} 매 이름을 새긴 방울을 평생 품고 다녔습니다.",
+     now:"{A:은} {B:을} 누구보다 아끼고 자랑하는 사람."},
+    {saja:"千載一遇",read:"천재일우",mean:"천 년에 한 번 올 만큼 드문 만남",rel:"표류한 어부와 섬에 홀로 살던 사람",era:"조선 · 울릉도",
+     story:"{A:은} 풍랑에 떠밀려 온 어부, {B:은} 울릉도에 홀로 살던 사람이었어요. 말도 잘 안 통했는데 둘은 석 달 동안 함께 배를 고쳤대요. 떠나는 날 {A:은} 꼭 돌아오겠다고 했고, 이듬해 정말로 돌아왔습니다.",
+     now:"만난 것 자체가 행운인 사이."},
+
+    /* 악연 */
+    {bad:true,saja:"吳越同舟",read:"오월동주",mean:"원수끼리 한 배를 탐",rel:"삼대째 원수인 두 집안의 뱃사공",era:"조선 · 낙동강 나루터",
+     story:"{A:과} {B:은} 삼대째 원수인 두 집안의 뱃사공이었어요. 나룻배가 하나뿐이라 매일 같은 배를 번갈아 저어야 했는데, 노 젓는 내내 한마디도 안 했대요. 배가 기울 때마다 서로 상대 쪽 무게 탓이라고 우겼습니다.",
+     now:"같은 팀이 되면 묘하게 신경이 곤두서는 사이. 조별과제는 피하세요."},
+    {bad:true,saja:"不俱戴天",read:"불구대천",mean:"같은 하늘 아래 함께 살 수 없는 원수",rel:"떡 하나로 삼대째 싸운 이웃",era:"조선 · 전주 골목",
+     story:"{A}의 할아버지가 {B}의 할아버지 떡을 한 입 베어 먹은 게 시작이었어요. 그 뒤로 두 집은 담장을 한 자씩 서로 밀어내며 쌓다가 골목 하나를 없앴대요. {A:과} {B:은} 태어날 때부터 서로를 미워하도록 배웠습니다.",
+     now:"음식을 나눠 먹을 땐 반드시 자로 재서 똑같이 자르세요."},
+    {bad:true,saja:"背恩忘德",read:"배은망덕",mean:"입은 은혜를 잊고 배신함",rel:"거둬 준 주인과 곳간 열쇠 들고 사라진 머슴",era:"조선 · 충청도 부잣집",
+     story:"{A:은} 굶주린 {B:을} 거둬 준 부잣집 주인, {B:은} 십 년 뒤 곳간 열쇠를 들고 사라진 머슴이었어요. 그 뒤로 {A:은} 죽을 때까지 대문 빗장을 두 번씩 걸었대요.",
+     now:"{A:은} {B}에게 돈만큼은 빌려주지 않는 게 좋아요."},
+    {bad:true,saja:"口蜜腹劍",read:"구밀복검",mean:"입에는 꿀, 배 속에는 칼",rel:"앞에선 웃고 뒤에선 모함한 두 관리",era:"조선 · 한양 육조거리",
+     story:"{A:과} {B:은} 같은 관청의 관리였어요. 마주치면 형님 아우 하며 웃었지만 밤마다 상대를 헐뜯는 상소를 몰래 올렸대요. 결국 둘 다 같은 날 귀양을 갔는데, 귀양지에서도 옆집이었습니다.",
+     now:"서로 앞에서 하는 칭찬은 반만 믿으세요."},
+    {bad:true,saja:"漁夫之利",read:"어부지리",mean:"둘이 다투는 사이 엉뚱한 사람이 이득을 봄",rel:"길 하나 사이에 둔 국밥집 두 주인",era:"조선 · 남한산성 아래 장터",
+     story:"{A:과} {B:은} 길 하나를 사이에 둔 국밥집 주인이었어요. 손님을 뺏으려 국밥값을 반값, 또 반값으로 내리다 둘 다 문을 닫았대요. 그 자리엔 길 건너 떡장수가 큰 가게를 차렸습니다.",
+     now:"둘이 다툴수록 남 좋은 일만 생기는 사이."},
+    {bad:true,saja:"氷炭之間",read:"빙탄지간",mean:"얼음과 숯처럼 도무지 어울릴 수 없는 사이",rel:"한 방을 쓰게 된 성미 정반대 두 유생",era:"조선 · 영주 소수서원",
+     story:"{A:은} 해 뜨기 전에 일어나는 유생, {B:은} 해가 지고 나서야 정신이 드는 유생이었어요. 한 방을 쓰게 된 첫날부터 등잔불을 켜느냐 끄느냐로 싸웠고, 결국 원장이 방 한가운데 병풍을 세웠대요.",
+     now:"같이 여행 가면 숙소는 꼭 따로 잡으세요."},
+    {bad:true,saja:"落井下石",read:"낙정하석",mean:"우물에 빠진 사람에게 돌을 던짐",rel:"배가 가라앉은 인삼 상인과 그 소문을 퍼뜨린 동업자",era:"조선 후기 · 의주 국경 장터",
+     story:"{A}의 인삼 배가 풍랑에 가라앉던 날, 동업자 {B:은} 그 소식을 장터에 제일 먼저 퍼뜨렸대요. 덕분에 {A}의 빚쟁이들이 하루 만에 대문 앞에 몰려왔습니다.",
+     now:"{A}의 안 좋은 소식은 {B}에게 제일 나중에 알리세요."},
+    {bad:true,saja:"甘呑苦吐",read:"감탄고토",mean:"달면 삼키고 쓰면 뱉음",rel:"잘나갈 때만 찾아오던 술친구",era:"조선 · 경주 읍내",
+     story:"{A:이} 과거에 급제하자 {B:은} 날마다 찾아와 술을 샀어요. {A:이} 벼슬에서 쫓겨나던 날, {B}의 집 대문은 굳게 잠겨 있었대요. 다시 복직하자 {B:은} 그날 저녁 술병을 들고 나타났습니다.",
+     now:"{B}에게서 갑자기 연락이 오면 일단 의심부터."},
+    {bad:true,saja:"指鹿爲馬",read:"지록위마",mean:"사슴을 가리켜 말이라 우김",rel:"사슴을 말이라 팔아먹은 장사꾼과 속은 손님",era:"고려 · 개경 장터",
+     story:"{B:은} 사슴을 끌고 와 명마라고 우겼고, {A:은} 끝내 그 사슴에 안장을 얹어 집에 돌아갔대요. 다음 날 사슴은 산으로 도망쳤고 {B:은} 이미 장을 떠난 뒤였습니다.",
+     now:"{B}의 말은 꼭 두 번 확인하세요."},
+    {bad:true,saja:"骨肉相爭",read:"골육상쟁",mean:"가까운 사이끼리 서로 다툼",rel:"소 한 마리를 두고 싸운 형제",era:"조선 · 경상도 종갓집",
+     story:"{A:과} {B:은} 아버지가 남긴 소 한 마리를 두고 다툰 형제였어요. 소를 반으로 나눌 수 없어 삼 년을 싸우는 사이 소가 늙어 버렸대요. 소 장례도 따로따로 치렀습니다.",
+     now:"돈 얘기는 처음부터 문서로 남기세요."},
+    {bad:true,saja:"雪上加霜",read:"설상가상",mean:"눈 위에 서리까지 덮침",rel:"서로에게 불운만 몰아다 준 이웃",era:"조선 · 함평 들녘",
+     story:"{A}의 집에 불이 난 날 {B:은} 돕겠다며 물 대신 술독을 부었대요. 이듬해 {B}의 논이 가물자 {A:은} 기우제를 지내 주겠다며 북을 쳤는데, 그날 우박이 쏟아졌습니다.",
+     now:"둘이 같이 뭘 하면 일이 자꾸 꼬이는 사이."},
+    {bad:true,saja:"敬而遠之",read:"경이원지",mean:"겉으로는 공경하나 속으로는 멀리함",rel:"깐깐한 암행 감찰관과 늘 걸리던 아전",era:"조선 · 나주 관아",
+     story:"{A:은} 털어서 먼지 안 나는 사람 없다는 감찰관, {B:은} 유독 먼지가 많던 아전이었어요. {B:은} {A:이} 고을에 온다는 소문만 들어도 앓아누웠대요. {A:은} 그걸 알고 일부러 더 자주 왔습니다.",
+     now:"{B}에게 {A:은} 대단하지만 마주치기 싫은 사람."}
+  ];
+
+  /* 악연(50% 미만)이 나올 확률 */
+  var BAD_RATE=0.14;
+  var GOOD=LIVES.filter(function(l){return !l.bad;});
+  var BAD=LIVES.filter(function(l){return l.bad;});
+
+  /* 같은 두 사람 → 항상 같은 결과 */
+  function fnv(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h;}
+  function rng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+  function reading(p1,p2){
+    var k1=p1.name+"|"+p1.birth, k2=p2.name+"|"+p2.birth;
+    var ordered=[p1,p2].sort(function(a,b){var ka=a.name+"|"+a.birth,kb=b.name+"|"+b.birth;return ka<kb?-1:ka>kb?1:0;});
+    var r=rng(fnv([k1,k2].sort().join("#")));
+    var pool=r()<BAD_RATE?BAD:GOOD;
+    var life=pool[Math.floor(r()*pool.length)];
+    var swap=r()<.5;
+    var A=swap?ordered[1].name:ordered[0].name, B=swap?ordered[0].name:ordered[1].name;
+    var score=life.bad?8+Math.floor(r()*38):61+Math.floor(r()*39);
+    return {life:life,A:A,B:B,score:score};
+  }
+  function tier(s){return s>=90?"하늘이 맺은 인연":s>=80?"깊은 인연":s>=70?"질긴 인연":s>=61?"스쳐도 다시 만날 인연":s>=30?"얽히고설킨 악연":s>=15?"피해야 할 악연":"만나면 안 되는 악연";}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];});}
+
+  function render(p1,p2){
+    var o=reading(p1,p2), L=o.life;
+    var pair=p1.name+(batchim(p1.name)?"과 ":"와 ")+p2.name+"의 전생";
+    var sealChars=(L.bad?"前生惡緣":"前生因緣").split("").map(function(ch){return "<span>"+ch+"</span>";}).join("");
+    resultView.innerHTML=
+      '<div class="result">'+
+        '<div class="calli">'+
+          '<div class="side ink" style="--d:0">'+esc(pair)+'</div>'+
+          '<div class="saja ink" style="--d:1">'+L.saja+'</div>'+
+          '<div class="seal" aria-hidden="true">'+sealChars+'</div>'+
+        '</div>'+
+        '<div class="saja-read ink" style="--d:3">'+L.read+'</div>'+
+        '<div class="saja-mean ink" style="--d:3">'+L.mean+'</div>'+
+        '<svg class="stroke ink" style="--d:4" viewBox="0 0 240 12" aria-hidden="true"><path d="M2 6 C 60 1.5, 150 1, 238 5 C 150 10, 60 10.5, 2 6 Z"/></svg>'+
+        '<h2 class="rel ink" style="--d:5">'+esc(L.rel)+'</h2>'+
+        '<div class="era ink" style="--d:5">'+esc(L.era)+'</div>'+
+        '<p class="story ink" style="--d:6">'+esc(fill(L.story,o.A,o.B))+'</p>'+
+        '<div class="score ink" style="--d:8">'+
+          '<span class="score-label">인연 지수</span>'+
+          '<span class="score-num"><span id="num">0</span><small>%</small></span>'+
+          '<div class="bar"><i id="barfill"></i></div>'+
+          '<span class="score-tier">'+tier(o.score)+'</span>'+
+        '</div>'+
+        '<div class="now ink" style="--d:9"><b>현생 풀이</b><p>'+esc(fill(L.now,o.A,o.B))+'</p></div>'+
+        '<div class="actions ink" style="--d:10">'+
+          '<button class="btn btn-seal" type="button" id="again">다른 사람과 보기</button>'+
+          '<button class="btn btn-line" type="button" id="reset">처음부터</button>'+
+        '</div>'+
+        '<p class="fine ink" style="--d:10">재미로 보는 전생 이야기예요.</p>'+
+      '</div>';
+    document.getElementById("again").addEventListener("click",function(){toForm(false);});
+    document.getElementById("reset").addEventListener("click",function(){toForm(true);});
+    return o.score;
+  }
+
+  function wait(ms){return new Promise(function(r){setTimeout(r,ms);});}
+  function openTo(){
+    var target=document.getElementById("mount").offsetHeight;
+    if(RM){wrap.style.height="auto";return Promise.resolve();}
+    wrap.style.height=target+"px";
+    return wait(1150).then(function(){wrap.style.height="auto";});
+  }
+  function close(){
+    if(RM){return Promise.resolve();}
+    wrap.style.height=wrap.offsetHeight+"px";
+    void wrap.offsetHeight;
+    wrap.style.height="0px";
+    return wait(900);
+  }
+  function countUp(score){
+    var num=document.getElementById("num"), bar=document.getElementById("barfill");
+    bar.style.width=score+"%";
+    if(RM){num.textContent=score;return;}
+    var t0=null;
+    function step(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/1200);num.textContent=Math.round(score*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+
+  var busy=false;
+  form.addEventListener("submit",function(e){
+    e.preventDefault(); if(busy) return;
+    var p1={name:document.getElementById("n1").value.trim(),birth:document.getElementById("b1").value};
+    var p2={name:document.getElementById("n2").value.trim(),birth:document.getElementById("b2").value};
+    if(!p1.name||!p2.name){errEl.textContent="두 사람의 이름을 모두 적어 주세요.";return;}
+    if(!p1.birth||!p2.birth){errEl.textContent="두 사람의 생일을 모두 골라 주세요.";return;}
+    errEl.textContent=""; busy=true;
+    close().then(function(){
+      statusEl.classList.add("on");
+      form.hidden=true; paper.classList.remove("revealed","stamped");
+      var score=render(p1,p2); resultView.hidden=false;
+      return wait(RM?0:900).then(function(){statusEl.classList.remove("on");return openTo();}).then(function(){
+        paper.classList.add("revealed");
+        return wait(RM?0:1000);
+      }).then(function(){
+        countUp(score);
+        return wait(RM?0:1300);
+      }).then(function(){paper.classList.add("stamped");busy=false;});
+    });
+  });
+
+  function toForm(all){
+    if(busy) return; busy=true;
+    close().then(function(){
+      resultView.hidden=true; resultView.innerHTML=""; form.hidden=false;
+      paper.classList.remove("revealed","stamped");
+      document.getElementById("n2").value=""; document.getElementById("b2").value="";
+      if(all){document.getElementById("n1").value="";document.getElementById("b1").value="";}
+      return openTo();
+    }).then(function(){busy=false;});
+  }
+
+  /* 처음 열릴 때 두루마리 펼치기 */
+  requestAnimationFrame(function(){requestAnimationFrame(function(){openTo();});});
+})();
+</script>
+
+</body>
+</html>
